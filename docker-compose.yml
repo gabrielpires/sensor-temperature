@@ -1,0 +1,17 @@
+version: "3.5"
+services:
+  sensor-mongo:
+    image: mongo:latest
+    container_name: sensor-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+    ports:
+      - 27017:27017
+    volumes:
+      - ./database:/data/db
+    networks:
+      - sensor_network
+networks:
+  sensor_network:
+    name: default_network

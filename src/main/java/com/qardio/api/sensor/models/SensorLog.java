@@ -1,4 +1,4 @@
-package com.qardio.temperature.models;
+package com.qardio.api.sensor.models;
 
 import java.util.Date;
 import java.util.UUID;

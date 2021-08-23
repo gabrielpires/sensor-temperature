@@ -1,6 +1,8 @@
-package com.qardio.temperature.controllers;
+package com.qardio.api.sensor.controllers;
 
-import com.qardio.temperature.models.SensorLog;
+import com.qardio.api.sensor.models.SensorLog;
+import com.qardio.api.sensor.payloads.ListSensorLogs;
+import com.qardio.api.sensor.payloads.SaveSensorLog;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -10,8 +12,8 @@ import java.util.List;
 @RestController
 class SensorController {
 
-    @GetMapping("/temperature/{aggregateType}")
-    List<SensorLog> all(@PathVariable String aggregateType){
+    @GetMapping("/temperature")
+    List<SensorLog> all(@RequestBody ListSensorLogs payload){
 
         List<SensorLog> result = new ArrayList<>();
 
@@ -26,9 +28,9 @@ class SensorController {
     }
 
     @PostMapping("/temperature")
-    List<SensorLog> save(@RequestBody List<SensorLog> list){
+    List<SensorLog> save(@RequestBody List<SaveSensorLog> payload){
 
-        return list;
+        return null;
     }
 
 }

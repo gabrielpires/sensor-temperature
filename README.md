@@ -1,4 +1,4 @@
-# sensor logger
+# Sensor Logger
 This is an assignment project created by Gabriel Pires for Qardio.
 
 
@@ -26,10 +26,9 @@ In this exercise I was asked to create a simple REST API to save a temperature s
 
 
 ### Flow Diagram
-#### Delivered
-![Demo](https://gabrielpires.com.br/images/farecalculation_flow.png)
-
-#### Production Design
+#### Delivered Flow + Production Suggestion
+![Demo](https://gabrielpires.com.br/images/qardio_challenge.png)
+[Full size at url: https://gabrielpires.com.br/images/qardio_challenge.png](https://gabrielpires.com.br/images/qardio_challenge.png)
 
 ### Stack
 * Java 16

@@ -11,6 +11,9 @@ import java.util.Date;
 public abstract class AbstractSensorLogAggregated {
 
 
+    /**
+     * The Id.
+     */
     @Id
     public String id;
 
@@ -50,6 +53,14 @@ public abstract class AbstractSensorLogAggregated {
         this.totalRecords = totalRecords;
     }
 
+    /**
+     * Instantiates a new Abstract sensor log aggregated.
+     *
+     * @param id                 the id
+     * @param when               the when
+     * @param averageTemperature the average temperature
+     * @param totalRecords       the total records
+     */
     public AbstractSensorLogAggregated(String id, Date when, Float averageTemperature, Integer totalRecords) {
         this.id = id;
         this.when = when;

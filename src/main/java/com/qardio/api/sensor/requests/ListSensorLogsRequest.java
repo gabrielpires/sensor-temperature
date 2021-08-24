@@ -48,6 +48,7 @@ public class ListSensorLogsRequest {
      * @param aggregationType the aggregation
      * @param from            the from
      * @param to              the to
+     * @throws AggregationTypeNotAllowedException the aggregation type not allowed exception
      */
     public ListSensorLogsRequest(String aggregationType, Date from, Date to) throws AggregationTypeNotAllowedException {
 

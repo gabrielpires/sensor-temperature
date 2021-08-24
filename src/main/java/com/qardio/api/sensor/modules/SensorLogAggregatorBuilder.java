@@ -36,9 +36,9 @@ public class SensorLogAggregatorBuilder {
     /**
      * Instantiates a new Sensor log aggregator builder.
      *
-     * @param sensorLogAggregatedRepository
-     * @param sensorLogDailyAggregatedRepository
-     * @param sensorLogHourlyAggregatedRepository
+     * @param sensorLogAggregatedRepository       the sensor log aggregated repository
+     * @param sensorLogDailyAggregatedRepository  the sensor log daily aggregated repository
+     * @param sensorLogHourlyAggregatedRepository the sensor log hourly aggregated repository
      */
     public SensorLogAggregatorBuilder(
             SensorLogAggregatedRepository sensorLogAggregatedRepository,
@@ -54,7 +54,7 @@ public class SensorLogAggregatorBuilder {
 
     /**
      * Build.
-     * <p>
+     *
      * For each date set in the internal list, we will project a aggregated calculation
      * This will perform the projection of DAILY and HOURLY aggregation based on the
      * available dates.
@@ -65,7 +65,7 @@ public class SensorLogAggregatorBuilder {
 
     /**
      * Project.
-     * <p>
+     *
      * This function will build from and to dates based on the original date
      * Using the from and to date, we fetch the data aggregated for 2 different types: DAILY and HOURLY
      * After that we project back the data to mongodb

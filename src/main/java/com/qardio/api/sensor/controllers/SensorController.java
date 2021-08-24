@@ -24,8 +24,7 @@ import java.util.Map;
  * The type Sensor controller.
  */
 @RestController
-public
-class SensorController {
+public class SensorController {
 
     @Autowired
     private SensorLogRepository repository;
@@ -45,10 +44,11 @@ class SensorController {
     /**
      * All list.
      *
+     * @param listSensorLogs the list sensor logs
      * @return the list
      */
     @GetMapping("/log")
-    List<? extends AbstractSensorLogAggregated> all(@RequestBody ListSensorLogsRequest listSensorLogs) {
+    List<? extends AbstractSensorLogAggregated> list(@RequestBody ListSensorLogsRequest listSensorLogs) {
 
         if (listSensorLogs.getAggregationType().equals(AggregationType.DAILY)) {
             return sensorLogDailyAggregatedRepository.findAll(
@@ -66,9 +66,10 @@ class SensorController {
      *
      * @param payload the payload
      * @return the list
+     * @throws ParseException the parse exception
      */
     @PostMapping("/log")
-    Map<String,Object> save(@RequestBody List<SaveSensorLogRequest> payload) throws ParseException {
+    Map<String, Object> save(@RequestBody List<SaveSensorLogRequest> payload) throws ParseException {
 
         Map<String, Object> result = new HashMap<>();
 
@@ -76,21 +77,20 @@ class SensorController {
         int logsSaved = 0;
         boolean aggregationGenerated = false;
         for (SaveSensorLogRequest entry : payload) {
-            if(this.projectSensorLog(entry))
-            {
+            if (this.projectSensorLog(entry)) {
                 logsSaved++;
             }
         }
 
-        try{
+        try {
             this.sensorLogAggregatorBuilder.build();
             aggregationGenerated = true;
-        }catch(Exception exception){
+        } catch (Exception exception) {
             Logger.exception("Unable to generate aggregation of sensor logs", exception);
         }
 
         result.put("logsToSave", logsToSave);
-        result.put("logsSaves", logsSaved);
+        result.put("logsSaved", logsSaved);
         result.put("aggregationGenerated", aggregationGenerated);
 
         return result;
@@ -105,11 +105,11 @@ class SensorController {
 
         SensorLog log = payload.toSensorLog();
 
-        try{
+        try {
             repository.save(log);
             this.sensorLogAggregatorBuilder.add(log.when);
             return true;
-        }catch(Exception exception){
+        } catch (Exception exception) {
             Logger.exception("Unable to save sensor log", exception);
             return false;
         }

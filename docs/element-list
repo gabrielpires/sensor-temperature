@@ -1,0 +1,9 @@
+com.qardio.api.sensor
+com.qardio.api.sensor.controllers
+com.qardio.api.sensor.enums
+com.qardio.api.sensor.helpers
+com.qardio.api.sensor.models
+com.qardio.api.sensor.modules
+com.qardio.api.sensor.repositories
+com.qardio.api.sensor.requests
+com.qardio.api.sensor.requests.exceptions

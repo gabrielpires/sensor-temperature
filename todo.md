@@ -1,8 +1,0 @@
-
-
-SETUP DOCKER
-
-DONE - MAKE IT WORK AND RETURN
-
-Fix Aggregation Saving
-

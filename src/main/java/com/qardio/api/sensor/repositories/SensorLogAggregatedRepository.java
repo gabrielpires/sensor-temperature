@@ -1,12 +1,11 @@
 package com.qardio.api.sensor.repositories;
 
-import com.qardio.api.sensor.models.SensorLogAggregated;
+import com.qardio.api.sensor.models.SensorLogDailyAggregated;
+import com.qardio.api.sensor.models.SensorLogHourlyAggregated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
-
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
@@ -35,35 +34,59 @@ public class SensorLogAggregatedRepository {
     /**
      * List sensor log aggregated list.
      *
-     * @param aggregationType the aggregation type
      * @return the list
-     * @see SensorLogAggregated
+     * @see SensorLogDailyAggregated
      */
-    public List<SensorLogAggregated> listSensorLogAggregated(String aggregationType) {
-        return this.listSensorLogAggregated(aggregationType, null, null);
+    public List<SensorLogDailyAggregated> listSensorLogDailyAggregated() {
+        return this.listSensorLogDailyAggregated(null, null);
     }
 
     /**
      * List sensor log aggregated list.
      *
-     * @param aggregationType the aggregation type
-     * @param from            the from
-     * @param to              the to
+     * @param from the from
+     * @param to   the to
      * @return the list
-     * @see SensorLogAggregated
+     * @see SensorLogDailyAggregated
      */
-    public List<SensorLogAggregated> listSensorLogAggregated(
-            String aggregationType,
+    public List<SensorLogDailyAggregated> listSensorLogDailyAggregated(Date from, Date to) {
+
+
+        return mongoTemplate.aggregate(
+                this.getAggregation(false, from, to),
+                "sensorLog",
+                SensorLogDailyAggregated.class
+        ).getMappedResults();
+    }
+
+    /**
+     * List sensor log aggregated list.
+     *
+     * @return the list
+     * @see SensorLogHourlyAggregated
+     */
+    public List<SensorLogHourlyAggregated> listSensorLogHourlyAggregated() {
+        return this.listSensorLogHourlyAggregated(null, null);
+    }
+
+    /**
+     * List sensor log aggregated list.
+     *
+     * @param from the from
+     * @param to   the to
+     * @return the list
+     * @see SensorLogHourlyAggregated
+     */
+    public List<SensorLogHourlyAggregated> listSensorLogHourlyAggregated(
             Date from,
             Date to
     ) {
-        boolean hourly = aggregationType.equals("HOURLY");
 
         return mongoTemplate.aggregate(
-                        this.getAggregation(hourly, from, to),
-                        "sensorLog",
-                        SensorLogAggregated.class
-                ).getMappedResults();
+                this.getAggregation(true, from, to),
+                "sensorLog",
+                SensorLogHourlyAggregated.class
+        ).getMappedResults();
     }
 
     /**
@@ -74,7 +97,7 @@ public class SensorLogAggregatedRepository {
      * @param to     the to
      * @return the aggregation
      */
-    private Aggregation getAggregation(boolean hourly, Date from, Date to){
+    private Aggregation getAggregation(boolean hourly, Date from, Date to) {
 
         ProjectionOperation projectionOperation = this.getProjectionOperation(hourly);
         GroupOperation groupOperation = this.getGroupOperation();
@@ -82,7 +105,7 @@ public class SensorLogAggregatedRepository {
 
         //we cannot use an match without criteria
         //for that reason we create a aggregation without match
-        if(from == null && to == null){
+        if (from == null && to == null) {
             return newAggregation(
                     projectionOperation,
                     groupOperation,
@@ -105,14 +128,14 @@ public class SensorLogAggregatedRepository {
      * @param to   the to
      * @return the match operation
      */
-    private MatchOperation getMatchOperation(Date from, Date to){
+    private MatchOperation getMatchOperation(Date from, Date to) {
 
         Criteria matchCriteria = new Criteria("when");
-        if(from != null){
+        if (from != null) {
             matchCriteria.gte(from);
         }
 
-        if(to != null){
+        if (to != null) {
             matchCriteria.lte(to);
         }
 
@@ -150,7 +173,7 @@ public class SensorLogAggregatedRepository {
      *
      * @return the sort operation
      */
-    private SortOperation getSortOperation(){
+    private SortOperation getSortOperation() {
         return Aggregation.sort(Sort.Direction.ASC, "when");
     }
 

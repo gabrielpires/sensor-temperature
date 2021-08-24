@@ -1,4 +1,4 @@
-package com.qardio.api.sensor.payloads.exceptions;
+package com.qardio.api.sensor.requests.exceptions;
 
 public class AggregationTypeNotAllowedException extends Exception {
 

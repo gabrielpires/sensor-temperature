@@ -1,11 +1,13 @@
-package com.qardio.api.sensor.payloads;
+package com.qardio.api.sensor.requests;
+
+import com.qardio.api.sensor.models.SensorLog;
 
 import java.util.Date;
 
 /**
- * SaveSensorLog is a class to deserialization payload for POST /temperature
+ * SaveSensorLogRequest is a class to deserialization payload for POST /log
  */
-public class SaveSensorLog {
+public class SaveSensorLogRequest {
 
     /**
      * Temperature value, expected in CELSIUS
@@ -20,7 +22,7 @@ public class SaveSensorLog {
     /**
      * Class default constructor
      */
-    public SaveSensorLog(){
+    public SaveSensorLogRequest(){
 
     }
 
@@ -30,9 +32,20 @@ public class SaveSensorLog {
      * @param temperature - is the value in celsius
      * @param when        is the date when the measure occur
      */
-    public SaveSensorLog(Float temperature, Date when) {
+    public SaveSensorLogRequest(Float temperature, Date when) {
         this.temperature = temperature;
         this.when = when;
+    }
+
+
+    /**
+     * To sensor log sensor log.
+     *
+     * @return the sensor log
+     * @see SensorLog
+     */
+    public SensorLog toSensorLog(){
+        return new SensorLog(this.when, this.temperature);
     }
 
     /**

@@ -1,9 +1,11 @@
 package com.qardio.api.sensor.controllers;
 
+import com.qardio.api.sensor.enums.AggregationType;
+import com.qardio.api.sensor.models.AbstractSensorLogAggregated;
 import com.qardio.api.sensor.models.SensorLog;
-import com.qardio.api.sensor.models.SensorLogAggregated;
-import com.qardio.api.sensor.payloads.ListSensorLogs;
-import com.qardio.api.sensor.payloads.SaveSensorLog;
+import com.qardio.api.sensor.modules.SensorLogAggregatorBuilder;
+import com.qardio.api.sensor.requests.ListSensorLogsRequest;
+import com.qardio.api.sensor.requests.SaveSensorLogRequest;
 import com.qardio.api.sensor.repositories.SensorLogAggregatedRepository;
 import com.qardio.api.sensor.repositories.SensorLogDailyAggregatedRepository;
 import com.qardio.api.sensor.repositories.SensorLogHourlyAggregatedRepository;
@@ -11,10 +13,8 @@ import com.qardio.api.sensor.repositories.SensorLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.text.ParseException;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * The type Sensor controller.
@@ -34,19 +34,22 @@ class SensorController {
     @Autowired
     private SensorLogHourlyAggregatedRepository sensorLogHourlyAggregatedRepository;
 
+    @Autowired
+    private SensorLogAggregatorBuilder sensorLogAggregatorBuilder;
+
     /**
      * All list.
      *
      * @return the list
      */
     @GetMapping("/log")
-    List<SensorLogAggregated> all(@RequestBody ListSensorLogs listSensorLogs) {
+    List<? extends AbstractSensorLogAggregated> all(@RequestBody ListSensorLogsRequest listSensorLogs) {
 
-        return sensorLogAggregateRepository.listSensorLogAggregated(
-                listSensorLogs.getAggregation(),
-                listSensorLogs.getFrom(),
-                listSensorLogs.getTo()
-        );
+        if(listSensorLogs.getAggregationType().equals(AggregationType.DAILY)){
+            return sensorLogDailyAggregatedRepository.findAll();
+        }
+
+        return sensorLogHourlyAggregatedRepository.findAll();
     }
 
     /**
@@ -56,37 +59,30 @@ class SensorController {
      * @return the list
      */
     @PostMapping("/log")
-    List<SensorLog> save(@RequestBody List<SaveSensorLog> payload) {
+    List<SensorLog> save(@RequestBody List<SaveSensorLogRequest> payload) throws ParseException {
 
-        payload.forEach(entry -> repository.save(getSensorLog(entry)));
+        for(SaveSensorLogRequest entry : payload){
+            this.projectSensorLog(entry);
+        }
 
-
-        //generate hourly aggregation
-        List<SensorLogAggregated> hourlyAggregated = sensorLogAggregateRepository.listSensorLogAggregated("HOURLY");
-        hourlyAggregated.forEach(entry -> sensorLogHourlyAggregatedRepository.save(entry));
-
-        //generate daily aggregation
-        List<SensorLogAggregated> dailyAggregated = sensorLogAggregateRepository.listSensorLogAggregated("DAILY");
-        dailyAggregated.forEach(entry -> sensorLogDailyAggregatedRepository.save(entry));
+        this.sensorLogAggregatorBuilder.build();
 
         return null;
     }
 
     /**
-     * getSensorLog is a method to convert the incoming payload into the model SensorLog
+     * Project sensor log.
      *
-     * @param payload - is an instance of SaveSensorLog
-     * @return SensorLog
-     * @see SensorLog
+     * @param payload the payload
      */
-    private SensorLog getSensorLog(SaveSensorLog payload) {
+    private void projectSensorLog(SaveSensorLogRequest payload) throws ParseException {
 
-        return new SensorLog(
-                UUID.randomUUID().toString(),
-                payload.getTemperature(),
-                payload.getWhen()
-        );
+        SensorLog log = payload.toSensorLog();
 
+        repository.save(log);
+
+        this.sensorLogAggregatorBuilder.add(log.when);
     }
+
 
 }

@@ -32,3 +32,4 @@ mongodb/*
 
 .idea/*
 
+.env

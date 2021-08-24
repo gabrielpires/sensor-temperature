@@ -12,6 +12,20 @@ services:
       - ./mongodb:/data/db
     networks:
       - sensor_network
+  api:
+    container_name: sensor-api
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    restart: always
+    ports:
+      - "8513:8080"
+    links:
+      - sensor-mongo
+    env_file:
+      - ./.env
+    networks:
+      - sensor_network
 networks:
   sensor_network:
     name: default_network

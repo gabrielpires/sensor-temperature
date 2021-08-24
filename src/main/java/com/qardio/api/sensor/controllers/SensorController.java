@@ -11,6 +11,7 @@ import com.qardio.api.sensor.repositories.SensorLogDailyAggregatedRepository;
 import com.qardio.api.sensor.repositories.SensorLogHourlyAggregatedRepository;
 import com.qardio.api.sensor.repositories.SensorLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -20,6 +21,7 @@ import java.util.List;
  * The type Sensor controller.
  */
 @RestController
+public
 class SensorController {
 
     @Autowired
@@ -46,10 +48,14 @@ class SensorController {
     List<? extends AbstractSensorLogAggregated> all(@RequestBody ListSensorLogsRequest listSensorLogs) {
 
         if (listSensorLogs.getAggregationType().equals(AggregationType.DAILY)) {
-            return sensorLogDailyAggregatedRepository.findAll();
+            return sensorLogDailyAggregatedRepository.findAll(
+                    Sort.by(Sort.Direction.ASC, "when")
+            );
         }
 
-        return sensorLogHourlyAggregatedRepository.findAll();
+        return sensorLogHourlyAggregatedRepository.findAll(
+                Sort.by(Sort.Direction.ASC, "when")
+        );
     }
 
     /**

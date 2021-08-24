@@ -90,7 +90,7 @@ MongoDB will be also exposed at 27017
 ### To test the application
 Along with the project, I'm sharing an INSOMNIA collection at 
 ```
-<APPLICATION_FOLDER>/etc/insomnia
+<APPLICATION_FOLDER>/etc/insomnia.json
 ```
 In case INSOMNIA doesn't fit for tests, here is the cURL requests
 

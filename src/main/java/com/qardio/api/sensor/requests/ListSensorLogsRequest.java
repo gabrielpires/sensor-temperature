@@ -13,14 +13,6 @@ import java.util.Locale;
 public class ListSensorLogsRequest {
 
     /**
-     * List of allowed aggregation types
-     */
-    private final ArrayList<AggregationType> allowedAggregations = new ArrayList<>(2) {{
-        add(AggregationType.DAILY);
-        add(AggregationType.HOURLY);
-    }};
-
-    /**
      * Aggregation is the type of aggregation for the returned list
      * The value can be DAILY or HOURLY
      */

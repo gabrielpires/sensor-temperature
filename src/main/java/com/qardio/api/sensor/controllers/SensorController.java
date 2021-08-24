@@ -1,6 +1,7 @@
 package com.qardio.api.sensor.controllers;
 
 import com.qardio.api.sensor.enums.AggregationType;
+import com.qardio.api.sensor.helpers.Logger;
 import com.qardio.api.sensor.models.AbstractSensorLogAggregated;
 import com.qardio.api.sensor.models.SensorLog;
 import com.qardio.api.sensor.modules.SensorLogAggregatorBuilder;
@@ -15,7 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The type Sensor controller.
@@ -65,15 +68,32 @@ class SensorController {
      * @return the list
      */
     @PostMapping("/log")
-    List<SensorLog> save(@RequestBody List<SaveSensorLogRequest> payload) throws ParseException {
+    Map<String,Object> save(@RequestBody List<SaveSensorLogRequest> payload) throws ParseException {
 
+        Map<String, Object> result = new HashMap<>();
+
+        int logsToSave = payload.size();
+        int logsSaved = 0;
+        boolean aggregationGenerated = false;
         for (SaveSensorLogRequest entry : payload) {
-            this.projectSensorLog(entry);
+            if(this.projectSensorLog(entry))
+            {
+                logsSaved++;
+            }
         }
 
-        this.sensorLogAggregatorBuilder.build();
+        try{
+            this.sensorLogAggregatorBuilder.build();
+            aggregationGenerated = true;
+        }catch(Exception exception){
+            Logger.exception("Unable to generate aggregation of sensor logs", exception);
+        }
 
-        return null;
+        result.put("logsToSave", logsToSave);
+        result.put("logsSaves", logsSaved);
+        result.put("aggregationGenerated", aggregationGenerated);
+
+        return result;
     }
 
     /**
@@ -81,13 +101,19 @@ class SensorController {
      *
      * @param payload the payload
      */
-    private void projectSensorLog(SaveSensorLogRequest payload) throws ParseException {
+    private boolean projectSensorLog(SaveSensorLogRequest payload) throws ParseException {
 
         SensorLog log = payload.toSensorLog();
 
-        repository.save(log);
+        try{
+            repository.save(log);
+            this.sensorLogAggregatorBuilder.add(log.when);
+            return true;
+        }catch(Exception exception){
+            Logger.exception("Unable to save sensor log", exception);
+            return false;
+        }
 
-        this.sensorLogAggregatorBuilder.add(log.when);
     }
 
 

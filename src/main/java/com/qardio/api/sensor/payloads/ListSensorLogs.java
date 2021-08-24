@@ -4,6 +4,7 @@ import com.qardio.api.sensor.payloads.exceptions.AggregationTypeNotAllowedExcept
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * SaveSensorLog is a class to deserialization payload for POST /temperature
@@ -14,8 +15,8 @@ public class ListSensorLogs {
      * List of allowed aggregation types
      */
     private final ArrayList<String> allowedAggregations = new ArrayList<>(2){{
-        add("HOURLY");
         add("DAILY");
+        add("HOURLY");
     }};
 
     /**
@@ -48,7 +49,13 @@ public class ListSensorLogs {
      * @param to          the to
      */
     public ListSensorLogs(String aggregation, Date from, Date to) throws AggregationTypeNotAllowedException {
-        this.aggregation = aggregation;
+
+        if(aggregation == null){
+            //setting the first allowed as the default (CURRENTLY DAILY)
+            aggregation = allowedAggregations.get(0);
+        }
+
+        this.aggregation = aggregation.toUpperCase(Locale.ROOT);
         this.from = from;
         this.to = to;
 
@@ -81,7 +88,7 @@ public class ListSensorLogs {
      * @throws AggregationTypeNotAllowedException the aggregation type not allowed exception
      */
     public void setAggregation(String aggregation) throws AggregationTypeNotAllowedException {
-        this.aggregation = aggregation;
+        this.aggregation = aggregation.toUpperCase(Locale.ROOT);
         this.validateAggregationType();
     }
 

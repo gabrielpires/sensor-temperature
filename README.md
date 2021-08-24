@@ -147,17 +147,6 @@ curl --request GET \
 }'
 ```
 
-The list endpoint also supports date filtering
-```
-curl --request GET \
-  --url http://localhost:8513/log \
-  --header 'Content-Type: application/json' \
-  --data '{
-	"aggregationType":"hourly",
-	"from":"2021-08-20T18:00:00.000+00:00",
-	"to":"2021-08-25T18:00:00.000+00:00"
-}'
-```
 
 RESPONSE:
 ```
@@ -215,11 +204,6 @@ To run the tests ON UNIX BASED
 To run the tests ON WINDOWS
 ```
 mvnw.cmd test
-```
-
-### Coverage
-```
-
 ```
 
 ### Other Documentations

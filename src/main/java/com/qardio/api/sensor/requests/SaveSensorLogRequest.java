@@ -22,7 +22,7 @@ public class SaveSensorLogRequest {
     /**
      * Class default constructor
      */
-    public SaveSensorLogRequest(){
+    public SaveSensorLogRequest() {
 
     }
 
@@ -44,7 +44,7 @@ public class SaveSensorLogRequest {
      * @return the sensor log
      * @see SensorLog
      */
-    public SensorLog toSensorLog(){
+    public SensorLog toSensorLog() {
         return new SensorLog(this.when, this.temperature);
     }
 

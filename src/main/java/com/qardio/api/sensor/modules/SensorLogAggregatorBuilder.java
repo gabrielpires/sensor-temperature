@@ -35,6 +35,7 @@ public class SensorLogAggregatorBuilder {
 
     /**
      * Instantiates a new Sensor log aggregator builder.
+     *
      * @param sensorLogAggregatedRepository
      * @param sensorLogDailyAggregatedRepository
      * @param sensorLogHourlyAggregatedRepository
@@ -53,25 +54,25 @@ public class SensorLogAggregatorBuilder {
 
     /**
      * Build.
-     *
+     * <p>
      * For each date set in the internal list, we will project a aggregated calculation
      * This will perform the projection of DAILY and HOURLY aggregation based on the
      * available dates.
      */
-    public void build(){
+    public void build() {
         datesToUpdate.forEach(this::project);
     }
 
     /**
      * Project.
-     *
+     * <p>
      * This function will build from and to dates based on the original date
      * Using the from and to date, we fetch the data aggregated for 2 different types: DAILY and HOURLY
      * After that we project back the data to mongodb
      *
      * @param date the date
      */
-    private void project(Date date){
+    private void project(Date date) {
 
         Map<String, Date> dailyDates = this.getDailyFromAndTo(date);
         Map<String, Date> hourlyDates = this.getDailyFromAndTo(date);
@@ -81,10 +82,10 @@ public class SensorLogAggregatorBuilder {
                 dailyDates.get("to")
         );
 
-        for(SensorLogDailyAggregated sensorLogAggregated : dailyAggregationLogs){
-            try{
+        for (SensorLogDailyAggregated sensorLogAggregated : dailyAggregationLogs) {
+            try {
                 sensorLogDailyAggregatedRepository.save(sensorLogAggregated);
-            }catch(DuplicateKeyException exception){
+            } catch (Exception exception) {
                 SensorLogDailyAggregated existingSensorLogDailyAggregated = sensorLogDailyAggregatedRepository.findByWhen(
                         sensorLogAggregated.when
                 ).get(0);
@@ -99,10 +100,10 @@ public class SensorLogAggregatorBuilder {
                 hourlyDates.get("to")
         );
 
-        for(SensorLogHourlyAggregated sensorLogAggregated : hourlyAggregationLogs){
-            try{
+        for (SensorLogHourlyAggregated sensorLogAggregated : hourlyAggregationLogs) {
+            try {
                 sensorLogHourlyAggregatedRepository.save(sensorLogAggregated);
-            }catch(DuplicateKeyException exception){
+            } catch (Exception exception) {
                 SensorLogHourlyAggregated existingSensorLogDailyAggregated = sensorLogHourlyAggregatedRepository.findByWhen(
                         sensorLogAggregated.when
                 ).get(0);
@@ -123,7 +124,7 @@ public class SensorLogAggregatorBuilder {
      * @param date the date
      * @return the map
      */
-    private Map<String, Date> getDailyFromAndTo(Date date){
+    private Map<String, Date> getDailyFromAndTo(Date date) {
 
         calendar.setTime(date);
         calendar.set(Calendar.HOUR, 0);
@@ -150,7 +151,7 @@ public class SensorLogAggregatorBuilder {
      * @param date the date
      * @return the map
      */
-    private Map<String, Date> getHourlyFromAndto(Date date){
+    private Map<String, Date> getHourlyFromAndto(Date date) {
 
         calendar.setTime(date);
         calendar.set(Calendar.MINUTE, 0);
@@ -175,7 +176,7 @@ public class SensorLogAggregatorBuilder {
      */
     public void add(Date date) throws ParseException {
 
-        if(this.datesToUpdate.contains(date)){
+        if (this.datesToUpdate.contains(date)) {
             return;
         }
 

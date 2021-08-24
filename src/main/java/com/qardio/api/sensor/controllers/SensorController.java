@@ -45,7 +45,7 @@ class SensorController {
     @GetMapping("/log")
     List<? extends AbstractSensorLogAggregated> all(@RequestBody ListSensorLogsRequest listSensorLogs) {
 
-        if(listSensorLogs.getAggregationType().equals(AggregationType.DAILY)){
+        if (listSensorLogs.getAggregationType().equals(AggregationType.DAILY)) {
             return sensorLogDailyAggregatedRepository.findAll();
         }
 
@@ -61,7 +61,7 @@ class SensorController {
     @PostMapping("/log")
     List<SensorLog> save(@RequestBody List<SaveSensorLogRequest> payload) throws ParseException {
 
-        for(SaveSensorLogRequest entry : payload){
+        for (SaveSensorLogRequest entry : payload) {
             this.projectSensorLog(entry);
         }
 

@@ -5,7 +5,9 @@ import com.qardio.api.sensor.models.SensorLogHourlyAggregated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
+
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
@@ -164,7 +166,7 @@ public class SensorLogAggregatedRepository {
         return group(fields().and("aggregatedDate"))
                 .first(ConvertOperators.valueOf("aggregatedDate").convertToDate()).as("when")
                 .avg("temperature").as("averageTemperature")
-                .count().as("total");
+                .count().as("totalRecords");
 
     }
 

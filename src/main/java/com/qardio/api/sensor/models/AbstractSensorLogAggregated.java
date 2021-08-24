@@ -11,14 +11,13 @@ import java.util.Date;
 public abstract class AbstractSensorLogAggregated {
 
 
-
     @Id
     public String id;
 
     /**
      * The When.
      */
-    @Indexed(unique=true)
+    @Indexed(unique = true)
     public Date when;
 
     /**

@@ -15,7 +15,7 @@ public class ListSensorLogsRequest {
     /**
      * List of allowed aggregation types
      */
-    private final ArrayList<AggregationType> allowedAggregations = new ArrayList<>(2){{
+    private final ArrayList<AggregationType> allowedAggregations = new ArrayList<>(2) {{
         add(AggregationType.DAILY);
         add(AggregationType.HOURLY);
     }};
@@ -46,12 +46,12 @@ public class ListSensorLogsRequest {
      * Instantiates a new List sensor logs.
      *
      * @param aggregationType the aggregation
-     * @param from        the from
-     * @param to          the to
+     * @param from            the from
+     * @param to              the to
      */
     public ListSensorLogsRequest(String aggregationType, Date from, Date to) throws AggregationTypeNotAllowedException {
 
-        if(aggregationType == null){
+        if (aggregationType == null) {
             //setting the first allowed as the default (CURRENTLY DAILY)
             aggregationType = AggregationType.DAILY.toString();
         }
@@ -67,6 +67,9 @@ public class ListSensorLogsRequest {
      * @return the aggregation
      */
     public AggregationType getAggregationType() {
+        if (this.aggregationType == null) {
+            this.aggregationType = AggregationType.DAILY;
+        }
         return aggregationType;
     }
 
@@ -87,9 +90,9 @@ public class ListSensorLogsRequest {
      * @throws AggregationTypeNotAllowedException the aggregation type not allowed exception
      */
     public void setAggregationType(String aggregationType) throws AggregationTypeNotAllowedException {
-        try{
-            this.aggregationType = AggregationType.valueOf(aggregationType);
-        }catch(IllegalArgumentException exception){
+        try {
+            this.aggregationType = AggregationType.valueOf(aggregationType.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException exception) {
             throw new AggregationTypeNotAllowedException(aggregationType);
         }
     }

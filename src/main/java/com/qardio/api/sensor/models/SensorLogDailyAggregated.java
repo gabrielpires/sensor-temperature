@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Document(collection = "sensorLogDailyAggregated")
 public class SensorLogDailyAggregated extends AbstractSensorLogAggregated {
-        public SensorLogDailyAggregated(Date when, Float averageTemperature, Integer totalRecords) {
-                super(when, averageTemperature, totalRecords);
-        }
+    public SensorLogDailyAggregated(Date when, Float averageTemperature, Integer totalRecords) {
+        super(when, averageTemperature, totalRecords);
+    }
 }

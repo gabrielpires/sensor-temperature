@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Document(collection = "sensorLogHourlyAggregated")
 public class SensorLogHourlyAggregated extends AbstractSensorLogAggregated {
-        public SensorLogHourlyAggregated(Date when, Float averageTemperature, Integer totalRecords) {
-                super(when, averageTemperature, totalRecords);
-        }
+    public SensorLogHourlyAggregated(Date when, Float averageTemperature, Integer totalRecords) {
+        super(when, averageTemperature, totalRecords);
+    }
 }
